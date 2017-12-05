@@ -3,7 +3,6 @@ page-details {
 	.without-code {
 		.q-grid-toolbar-top {
 			padding-right: 45px;
-			padding-left: 200px;;
 		}
 	}
 
@@ -19,6 +18,7 @@ page-details {
 		position: absolute;
 		right: 10px;
 		top: 13px;
+		z-index: 1;
 	}
 
 	.page-details-example {

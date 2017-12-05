@@ -9,11 +9,11 @@ import {noop, identity} from '@grid/core/utility';
 import {getFactory as valueFactory} from '@grid/core/services/value';
 import {getFactory as labelFactory} from '@grid/core/services/label';
 import {RowDetailsStatus} from '@grid/core/row-details';
+import {Composite} from '@grid/core/infrastructure/composite';
 
 export default class Grid {
-	constructor($timeout, $q) {
+	constructor($timeout) {
 		this.$timeout = $timeout;
-		this.$q = $q;
 	}
 
 	model() {
@@ -30,21 +30,21 @@ export default class Grid {
 				behavior: 'core'
 			});
 
-			return () => {
-				const defer = this.$q.defer();
-				this.$timeout(() => {
-					model.scene({
-						status: 'stop'
-					}, {
-						source: 'grid',
-						behavior: 'core'
-					});
+			return job => {
+				const scene = model.scene;
+				scene({
+					round: scene().round + 1
+				}, {
+					source: 'grid',
+					behavior: 'core'
+				});
 
-					defer.resolve();
-				}, 10);
-
-				return defer.promise;
-			}
+				return this.$timeout(() => {
+					if (job) {
+						job();
+					}
+				}, 0);
+			};
 		};
 
 		return new GridService(model, start);
@@ -89,6 +89,10 @@ export default class Grid {
 	get labelFactory() {
 		return labelFactory;
 	}
+
+	get compose() {
+		return Composite;
+	}
 }
 
-Grid.$inject = ['$timeout', '$q'];
+Grid.$inject = ['$timeout'];

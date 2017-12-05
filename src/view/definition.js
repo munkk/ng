@@ -7,6 +7,7 @@ export const TEMPLATE_PATH_NAME = `${MODULE_NAME}TemplatePath`;
 export const THEME_NAME = `${MODULE_NAME}Theme`;
 export const RANGE_NAME = `${MODULE_NAME}Range`;
 export const HIGHLIGHT_NAME = `${MODULE_NAME}Highlight`;
+export const PRETTY_NAME = `${MODULE_NAME}Pretty`;
 
 export const GRID = 'qGrid';
 export const GRID_CORE = `${GRID}Core`;
@@ -54,7 +55,10 @@ export const RAISE_NAME = `${GRID}Raise`;
 export const ANIMATE_NAME = `${GRID}Animate`;
 export const POSITION_NAME = `${GRID}Position`;
 export const AUTOFOCUS_NAME = `${GRID}Autofocus`;
+export const STOP_PROPAGATE_NAME = `${GRID}StopPropagate`;
+export const PREVENT_DEFAULT_NAME = `${GRID}PreventDefault`;
 
 export const FILE_UPLOAD_NAME = `${GRID}FileUpload`;
 export const FILE_UPLOAD_LABEL_NAME = `${GRID}FileUploadLabel`;
 export const CAN_UPLOAD_NAME = `${GRID}CanUpload`;
+

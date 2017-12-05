@@ -1,14 +1,13 @@
 import RootComponent from '../root.component';
-import {Table, Bag} from '@grid/core/dom';
-import {LayerFactory} from '@grid/view/services';
-import {AppError} from '@grid/core/infrastructure';
-import {TableCommandManager} from '@grid/core/command';
-import {isUndefined} from '@grid/core/utility';
+import { LayerFactory } from '@grid/view/services';
+import { AppError } from '@grid/core/infrastructure';
+import { isUndefined } from '@grid/core/utility';
 import TemplateLink from '../template/template.link';
-import {EventListener, EventManager, Model} from '@grid/core/infrastructure';
+import { EventListener, EventManager } from '@grid/core/infrastructure';
+import { GridCtrl } from '@grid/core/grid/grid.ctrl';
 
 export class Grid extends RootComponent {
-	constructor($rootScope, $scope, $element, $transclude, $document, $timeout, $templateCache, $compile) {
+	constructor($rootScope, $scope, $element, $transclude, $document, $timeout, $templateCache, $compile, $window) {
 		super('grid', 'data', 'selection', 'sort', 'group', 'pivot', 'edit', 'style', 'action', 'filter');
 
 		this.$rootScope = $rootScope;
@@ -18,54 +17,30 @@ export class Grid extends RootComponent {
 		this.$timeout = $timeout;
 
 		this.template = new TemplateLink($compile, $templateCache);
-		this.markup = {
-			document: $document[0]
-		};
 
-		this.bag = {
-			head: new Bag(),
-			body: new Bag(),
-			foot: new Bag()
-		};
-		this.listener = new EventListener($element[0], new EventManager(this, this.applyFactory(null, 'sync')));
+		this.listener = new EventListener($element[0], new EventManager(this));
+		this.windowListener = new EventListener($window, new EventManager(this));
 	}
 
 	onInit() {
 		const model = this.model;
-		if (model.grid().status === 'bound') {
-			throw new AppError('grid', `Model is already used by grid "${model.grid().id}"`);
+		if (!model) {
+			throw new AppError('grid', 'Model is not setup');
 		}
 
-		model.grid({
-			status: 'bound'
+		const ctrl = this.ctrl = new GridCtrl(model, {
+			layerFactory: markup => new LayerFactory(markup, this.template),
+			element: this.$element[0]
 		});
 
-		const bag = this.bag;
-		const layerFactory = new LayerFactory(this.markup, this.template);
-		const tableContext = {
-			layer: name => layerFactory.create(name),
-			bag: bag
-		};
-
-		this.table = new Table(model, this.markup, tableContext);
-		this.commandManager = new TableCommandManager(this.applyFactory(), this.table);
-		this.using(this.listener.on('keydown', e => {
-			if (model.action().shortcut.keyDown(e)) {
-				e.preventDefault();
-				e.stopPropagation();
-			}
-		}));
-
-		if (!this.gridId) {
-			this.$element[0].id = model.grid().id;
-		}
+		this.table = ctrl.table;
+		this.bag = ctrl.bag;
+		this.markup = ctrl.markup;
 
 		this.compile();
-		this.using(this.model.sceneChanged.watch(e => {
-			if (e.hasChanges('column')) {
-				this.invalidateVisibility();
-			}
-		}));
+
+		this.using(this.windowListener.on('focusin', ctrl.invalidateActive.bind(ctrl)));
+		this.using(this.listener.on('keydown', ctrl.keyDown.bind(ctrl)));
 	}
 
 	compile() {
@@ -81,17 +56,6 @@ export class Grid extends RootComponent {
 
 		template.remove();
 		templateScope.$destroy();
-	}
-
-	invalidateVisibility() {
-		const area = this.model.scene().column.area;
-		const visibility = this.model.visibility;
-		visibility({
-			pin: {
-				left: area.left.length,
-				right: area.right.length
-			}
-		});
 	}
 
 	applyFactory(gf = null, mode = 'async') {
@@ -134,18 +98,10 @@ export class Grid extends RootComponent {
 		return this.model.visibility();
 	}
 
-	get isActive() {
-		return this.table.view.isFocused();
-	}
-
 	onDestroy() {
 		super.onDestroy();
 
-		this.model.grid({
-			status: 'unbound'
-		});
-
-		Model.dispose(this.model, 'component');
+		this.ctrl.dispose();
 	}
 }
 
@@ -157,11 +113,12 @@ Grid.$inject = [
 	'$document',
 	'$timeout',
 	'$templateCache',
-	'$compile'
+	'$compile',
+	'$window'
 ];
 
 /**
- * By convention all binding should be named in camelCase like: modelname + [P]ropertyname
+ * By convention all bindings should be named in camelCase like: modelname + [P]ropertyname
  */
 export default {
 	transclude: true,
@@ -170,6 +127,7 @@ export default {
 	controllerAs: '$grid',
 	bindings: {
 		gridId: '@id',
+		gridTitle: '@header',
 		model: '<',
 		dataRows: '<rows',
 		dataColumns: '<columns',

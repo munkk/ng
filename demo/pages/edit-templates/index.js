@@ -132,7 +132,7 @@ export default function Controller($http, $mdToast, qgrid, $timeout) {
 			key: 'contact.email.primary',
 			title: 'Primary Email',
 			type: 'email',
-			value: item => item.contact.email[0]
+			value: (item, value) => isUndef(value) ? item.contact.email[0] : item.contact.email[0] = value
 		},
 		{
 			key: 'likes',
@@ -167,9 +167,7 @@ export default function Controller($http, $mdToast, qgrid, $timeout) {
 			type: 'file',
 			value: (item, value) => isUndef(value) ? item.attachment : item.attachment = value,
 			label: (item, label) => isUndef(label) ? item.attachmentLabel || null : item.attachmentLabel = label,
-			fetch: (item, d) => {
-				$http().then(result => d.resolve(result));
-			}
+			fetch: (item, d) => $http().then(result => d.resolve(result))
 		}
 	];
 

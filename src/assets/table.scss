@@ -1,5 +1,3 @@
-@import "scroll";
-
 .q-grid-table {
 	table {
 		border-spacing: 0;
@@ -47,9 +45,14 @@
 }
 
 .q-grid-with-right-pin {
-	.q-grid-table.q-grid-table-center {
-		thead, tfoot {
-			width: 100%;
+	> .q-grid-view {
+		> .q-grid-table.q-grid-table-center {
+			> table {
+				> thead, > tfoot {
+					width: 100%;
+				}
+
+			}
 		}
 	}
 }

@@ -327,6 +327,10 @@
 				"path": "selection-model"
 			},
 			{
+				"title": "Selection Behavior",
+				"path": "selection-behavior"
+			},
+			{
 				"title": "Master Details",
 				"path": "master-details"
 			},
@@ -378,6 +382,10 @@
 			{
 				"title": "Dialog",
 				"path": "dialog"
+			},
+			{
+				"title": "Tab Control",
+				"path": "tab-control"
 			}
 		]
 	},
@@ -399,7 +407,7 @@
 		"items": [
 			{
 				"title": "Persistence API",
-				"path": "persistence-api"
+				"path": "persistence"
 			}
 		]
 	},
@@ -464,8 +472,8 @@
 				"path": "status-bar"
 			},
 			{
-				"title": "Legend Bar",
-				"path": "legend-bar"
+				"title": "Legend",
+				"path": "legend"
 			},
 			{
 				"title": "Import Panel",

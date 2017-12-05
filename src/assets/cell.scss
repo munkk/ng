@@ -1,6 +1,7 @@
-@import "mixins";
+@import 'mixins';
 
-td, th {
+td,
+th {
 	vertical-align: middle;
 	text-align: left;
 	overflow: hidden;
@@ -30,8 +31,11 @@ thead {
 	}
 }
 
-thead, tfoot, tbody {
-	td, th {
+thead,
+tfoot,
+tbody {
+	td,
+	th {
 		width: 150px;
 		min-width: 150px;
 		max-width: 150px;
@@ -81,7 +85,8 @@ thead, tfoot, tbody {
 		}
 
 		&.q-grid-number,
-		&.q-grid-currency {
+		&.q-grid-currency,
+		&.q-grid-id {
 			width: 100px;
 			min-width: 100px;
 			max-width: 100px;
@@ -94,36 +99,49 @@ thead, tfoot, tbody {
 		}
 
 		&.q-grid-row-indicator {
-			width: 55px;
-			min-width: 55px;
-			max-width: 55px;
+			width: 10px;
+			min-width: 10px;
+			max-width: 10px;
+			text-overflow: initial;
+		}
+
+		&.q-grid-row-options {
+			width: 56px;
+			min-width: 56px;
+			max-width: 56px;
+			text-overflow: initial;
 		}
 
 		&.q-grid-row-expand {
-			width: 55px;
-			min-width: 55px;
-			max-width: 55px;
+			width: 56px;
+			min-width: 56px;
+			max-width: 56px;
 		}
 
 		&.q-grid-row-number {
-			width: 55px;
-			min-width: 55px;
-			max-width: 55px;
+			width: 56px;
+			min-width: 56px;
+			max-width: 56px;
 		}
 
 		&.q-grid-select {
-			width: 55px;
-			min-width: 55px;
-			max-width: 55px;
+			width: 56px;
+			min-width: 56px;
+			max-width: 56px;
 		}
 	}
 }
 
-tbody, tfoot {
+tbody,
+tfoot {
 	td {
 		&.q-grid-number,
 		&.q-grid-currency {
 			text-align: right;
+		}
+
+		&.q-grid-id {
+			text-align: left;
 		}
 
 		&.q-grid-bool,
